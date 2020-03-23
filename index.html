@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>phaser - hello world</title>
+	<script src="libs/phaser.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+
+(function () {
+
+	var game = new Phaser.Game(600, 400, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+
+
+	var clave8, clave10, clave5, clave12, floor, floor2, circle, round, btn_power, rodar = false, ok_txt, erro_txt;
+
+	function preload() {
+
+		game.load.image('clave8', 'img/dentes8.png');
+		game.load.image('clave10', 'img/dentes10.png');
+		game.load.image('clave5', 'img/dentes5.png');
+		game.load.image('clave12', 'img/dentes12.png');
+
+		game.load.spritesheet('btn_power', 'img/btn_power.png', 90, 71);//botao
+
+	}
+
+
+	function create() {
+
+		game.stage.backgroundColor = '#000000';
+	
+		//rect de guia
+		floor = new Phaser.Rectangle(game.world.width/2 + 25, game.world.height/2 - 75, 50, 50);
+		
+		//rect2 de guia
+		floor2 = new Phaser.Rectangle(game.world.width/2 + 90, game.world.height/2 - 75, 50, 50);
+		
+		//circle de guia
+		circle = new Phaser.Circle(game.world.centerX + 40, game.world.centerY + 55,16);
+		
+		//round de guia
+		round = new Phaser.Circle(game.world.centerX + 108, game.world.centerY + 55,16);
+
+
+	
+		//clave 8
+		clave8 = game.add.sprite(game.world.width/2 + 125, game.world.height/2 - 75, 'clave8'); //posição
+		clave8.anchor.setTo(0.5,0.5); //centro de gravidade
+		clave8.body.setSize(50, 50, 10, -105);//h,w,x,y da massa
+		clave8.scale.x = 0.5;
+		clave8.scale.y = 0.5;
+		clave8.angle = 30;
+		
+		//drag clave8
+		clave8.inputEnabled = true;
+		clave8.input.pixelPerfect = true;
+		clave8.input.useHandCursor = true;
+		clave8.input.enableDrag(true);
+		clave8.body.allowRotation = true;
+	
+	
+	
+		//clave 5
+		clave5 = game.add.sprite(75, game.world.height/2 - 75, 'clave5'); //posição
+		clave5.anchor.setTo(0.5,0.5); //centro de gravidade
+		clave5.body.setSize(50, 50, 10, -108);//h,w,x,y da massa
+		clave5.scale.x = 0.5;
+		clave5.scale.y = 0.5;
+		clave5.angle = 95;
+		
+		//drag clave5
+		clave5.inputEnabled = true;
+		clave5.input.pixelPerfect = true;
+		clave5.input.useHandCursor = true;
+		clave5.input.enableDrag(true);
+		clave5.body.allowRotation = true;
+		
+		
+		
+		//clave 12
+		clave12 = game.add.sprite(75, game.world.height/2 + 125, 'clave12'); //posição
+		clave12.anchor.setTo(0.5,0.5); //centro de gravidade
+		clave12.body.setSize(50, 50, 10, -105);//h,w,x,y da massa
+		clave12.scale.x = 0.5;
+		clave12.scale.y = 0.5;
+		clave12.angle = 75;
+		
+		//drag clave12
+		clave12.inputEnabled = true;
+		clave12.input.pixelPerfect = true;
+		clave12.input.useHandCursor = true;
+		clave12.input.enableDrag(true);
+		clave12.body.allowRotation = true;
+		
+
+
+		
+		//clave10 - fixa
+		clave10 = game.add.sprite(game.world.width/2 -50, game.world.height/2 + 50, 'clave10'); //posição
+		clave10.anchor.setTo(0.5,0.5); //centro de gravidade
+		clave10.body.setSize(215, 50, 145, -100);//w,h,x,y da massa
+		clave10.scale.x = 0.5;
+		clave10.scale.y = 0.5;
+		clave10.angle = 0;
+
+
+
+		//botao power
+		btn_power = game.add.button(game.world.width - 100, 170, 'btn_power', power, this, 2, 1, 0);
+		btn_power.scale.x = 0.5;
+		btn_power.scale.y = 0.5;
+	
+	
+		//TEXTOS ok/erro
+	ok_txt = game.add.text(game.world.centerX - 50, -50, 'FUNCIONANDO', { font: "20px Arial", fill: "#ffffff", align: "left" });
+	ok_txt.z = 2;
+	erro_txt = game.add.text(game.world.centerX - 125, -50, 'ERROU, TENTE NOVAMENTE', { font: "20px Arial", fill: "#ffffff", align: "left" });
+	erro_txt.z = 2;
+
+	}
+
+	function update() {
+	
+		//reposicionar o drag 8 - pino 1
+		if(clave8.body.x + 20 >= floor.x &&
+			clave8.body.x - 60 <= floor.x &&
+			clave8.body.y + 20 >= floor.y &&
+			clave8.body.y - 60 <= floor.y){
+			clave8.x = game.world.width/2 + 40;
+			clave8.y = game.world.height/2 + 55;
+		}
+
+		//reposicionar o drag 8 - pino 2
+		if(clave8.body.x + 20 >= floor2.x &&
+			clave8.body.x - 60 <= floor2.x &&
+			clave8.body.y + 20 >= floor2.y &&
+			clave8.body.y - 60 <= floor2.y){
+			clave8.x = game.world.width/2 + 108;
+			clave8.y = game.world.height/2 + 55;
+		}
+		
+		
+		
+		//reposicionar o drag 5 - pino 1
+		if(clave5.body.x + 20 >= floor.x &&
+			clave5.body.x - 60 <= floor.x &&
+			clave5.body.y + 20 >= floor.y &&
+			clave5.body.y - 60 <= floor.y){
+			clave5.x = game.world.width/2 + 39;
+			clave5.y = game.world.height/2 + 56
+		}		
+				
+		//reposicionar o drag 5 - pino 2
+		if(clave5.body.x + 20 >= floor2.x &&
+			clave5.body.x - 60 <= floor2.x &&
+			clave5.body.y + 20 >= floor2.y &&
+			clave5.body.y - 60 <= floor2.y){
+			clave5.x = game.world.width/2 + 108;
+			clave5.y = game.world.height/2 + 55
+		}
+		
+		
+		
+		//reposicionar o drag 12 - pino 1
+		if(clave12.body.x + 20 >= floor.x &&
+			clave12.body.x - 60 <= floor.x &&
+			clave12.body.y + 20 >= floor.y &&
+			clave12.body.y - 60 <= floor.y){
+			clave12.x = game.world.width/2 + 40;
+			clave12.y = game.world.height/2 + 55
+		}		
+				
+		//reposicionar o drag 12 - pino 2
+		if(clave12.body.x + 20 >= floor2.x &&
+			clave12.body.x - 60 <= floor2.x &&
+			clave12.body.y + 20 >= floor2.y &&
+			clave12.body.y - 60 <= floor2.y){
+			clave12.x = game.world.width/2 + 108;
+			clave12.y = game.world.height/2 + 55
+		}
+		
+		
+		
+		
+		//fazer boolean rodar = true, roda as roldanas
+		if(rodar == true &&
+			clave8.body.x + 5 >= clave10.body.x &&
+			clave8.body.x - 5 <= clave10.body.x &&
+			clave8.body.y + 5 >= clave10.body.y &&
+			clave8.body.y - 5 <= clave10.body.y &&
+			
+			clave5.body.x + 150 >= clave10.body.x &&
+			clave5.body.x - 150 <= clave10.body.x &&
+			clave5.body.y + 5 >= clave10.body.y &&
+			clave5.body.y - 5 <= clave10.body.y
+			
+			){
+			clave5.angle -= 2;
+			clave8.angle += 1.25;
+			clave10.angle -= 1;
+			game.add.tween(ok_txt).to({ y: game.world.centerY - 25 }, 1000, Phaser.Easing.Linear.None, true);//ok
+		} else {
+			rodar = false;
+			clave8.angle += 0;
+			clave5.angle -= 0;
+			clave12.angle -= 0;
+			clave10.angle -= 0;
+		}
+			
+		
+		
+		
+
+	}		
+
+
+	//função botao ligar
+	function power () {
+		if(clave8.body.x + 5 >= clave10.body.x &&
+			clave8.body.x - 5 <= clave10.body.x &&
+			clave8.body.y + 5 >= clave10.body.y &&
+			clave8.body.y - 5 <= clave10.body.y &&
+			
+			clave5.body.x + 50 >= clave10.body.x + clave10.body.width/2 &&
+			clave5.body.x - 50 <= clave10.body.x + clave10.body.width/2 &&
+			clave5.body.y + 5 >= clave10.body.y &&
+			clave5.body.y - 5 <= clave10.body.y
+				
+			){
+			rodar = true;
+		} else {
+			rodar = false;
+			game.add.tween(erro_txt).to({ y: game.world.centerY - 25 }, 500, Phaser.Easing.Linear.None, true)//erro 
+			.to({ y: -50 }, 1000, Phaser.Easing.Linear.None, true)
+			.start();
+		}
+
+	}
+
+
+
+	//render o pino
+	function render() {
+
+	game.debug.renderCircle(circle,'#FF7A00');
+	game.debug.renderCircle(round,'#FF7A00');
+
+	
+	/*game.debug.renderSpriteBody(clave8);
+	game.debug.renderSpriteBody(clave5);
+	game.debug.renderSpriteBody(clave10);
+	game.debug.renderSpriteBody(clave12);
+
+	game.debug.renderRectangle(floor, 'rgba(55,30,200,0.5)');
+	game.debug.renderRectangle(floor2, 'rgba(205,00,200,0.5)');*/
+   
+	}
+
+
+})();
+
+</script>
+
+</body>
+</html>
